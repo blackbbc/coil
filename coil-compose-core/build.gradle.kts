@@ -4,7 +4,7 @@ import coil3.androidLibrary
 plugins {
     id("com.android.library")
     id("kotlin-multiplatform")
-    id("org.jetbrains.kotlinx.atomicfu")
+    id("kotlinx-atomicfu")
     id("dev.drewhamilton.poko")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -19,12 +19,12 @@ kotlin {
         commonMain {
             dependencies {
                 api(projects.coilCore)
-                api(compose.foundation)
+                api(libs.compose.foundation)
             }
         }
         commonTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.kotlin.test)
             }
         }
@@ -35,13 +35,13 @@ kotlin {
         }
         androidUnitTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.jvm)
             }
         }
         androidInstrumentedTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.android)
                 implementation(compose.desktop.uiTestJUnit4)
             }
@@ -59,5 +59,5 @@ baselineProfile {
 }
 
 dependencies {
-    baselineProfile(projects.internal.benchmark)
+//    baselineProfile(projects.internal.benchmark)
 }

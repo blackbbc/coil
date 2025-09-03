@@ -6,7 +6,7 @@ import org.jetbrains.compose.ExperimentalComposeLibrary
 plugins {
     id("com.android.library")
     id("kotlin-multiplatform")
-    id("org.jetbrains.kotlinx.atomicfu")
+    id("kotlinx-atomicfu")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
 }

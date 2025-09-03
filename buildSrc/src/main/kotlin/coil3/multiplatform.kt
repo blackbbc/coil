@@ -23,52 +23,54 @@ fun Project.addAllMultiplatformTargets(skikoVersion: Provider<String>, enableWas
                 }
             }
 
-            jvm()
+//            jvm()
 
-            js {
-                browser()
-                nodejs {
-                    testTask {
-                        useMocha {
-                            timeout = "60s"
-                        }
-                    }
-                }
-                binaries.executable()
-                binaries.library()
-            }
+//            js {
+//                browser()
+//                nodejs {
+//                    testTask {
+//                        useMocha {
+//                            timeout = "60s"
+//                        }
+//                    }
+//                }
+//                binaries.executable()
+//                binaries.library()
+//            }
 
-            if (enableWasm) {
-                @OptIn(ExperimentalWasmDsl::class)
-                wasmJs {
-                    // TODO: Fix wasm tests.
-                    browser {
-                        testTask {
-                            enabled = false
-                        }
-                    }
-                    nodejs {
-                        testTask {
-                            enabled = false
-                        }
-                    }
-                    binaries.executable()
-                    binaries.library()
-                }
-            }
+//            if (enableWasm) {
+//                @OptIn(ExperimentalWasmDsl::class)
+//                wasmJs {
+//                    // TODO: Fix wasm tests.
+//                    browser {
+//                        testTask {
+//                            enabled = false
+//                        }
+//                    }
+//                    nodejs {
+//                        testTask {
+//                            enabled = false
+//                        }
+//                    }
+//                    binaries.executable()
+//                    binaries.library()
+//                }
+//            }
 
             iosX64()
             iosArm64()
             iosSimulatorArm64()
 
-            macosX64()
-            macosArm64()
+//            macosX64()
+//            macosArm64()
+
+            ohosArm64()
         }
 
-        applyKotlinJsImplicitDependencyWorkaround(enableWasm)
-        if (enableWasm) {
-            createSkikoWasmJsRuntimeDependency(skikoVersion)
-        }
+//        applyKotlinJsImplicitDependencyWorkaround(enableWasm)
+//        if (enableWasm) {
+//            createSkikoWasmJsRuntimeDependency(skikoVersion)
+//        }
     }
 }
 

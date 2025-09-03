@@ -12,9 +12,9 @@ dependencies {
 
     implementation(libs.androidx.core)
 
-    testImplementation(projects.internal.testUtils)
+//    testImplementation(projects.internal.testUtils)
     testImplementation(libs.bundles.test.jvm)
 
-    androidTestImplementation(projects.internal.testUtils)
+//    androidTestImplementation(projects.internal.testUtils)
     androidTestImplementation(libs.bundles.test.android)
 }

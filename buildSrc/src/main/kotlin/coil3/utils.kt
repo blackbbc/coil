@@ -9,7 +9,7 @@ val publicModules = setOf(
     "coil-compose",
     "coil-compose-core",
     "coil-network-core",
-    "coil-network-ktor2",
+//    "coil-network-ktor2",
     "coil-network-ktor3",
     "coil-network-okhttp",
     "coil-network-cache-control",

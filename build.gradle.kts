@@ -5,8 +5,8 @@ import coil3.versionName
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import dev.drewhamilton.poko.gradle.PokoPluginExtension
-import kotlinx.validation.ApiValidationExtension
-import kotlinx.validation.ExperimentalBCVApi
+//import kotlinx.validation.ApiValidationExtension
+//import kotlinx.validation.ExperimentalBCVApi
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
@@ -18,8 +18,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
     repositories {
+        maven("https://mirrors.tencent.com/nexus/repository/maven-tencent")
+        maven("https://mirrors.tencent.com/nexus/repository/maven-public")
         google()
         mavenCentral()
+        mavenLocal()
     }
     dependencies {
         classpath(libs.gradlePlugin.android)
@@ -35,22 +38,23 @@ buildscript {
 
 plugins {
     alias(libs.plugins.baselineProfile) apply false
-    alias(libs.plugins.binaryCompatibility)
+//    alias(libs.plugins.binaryCompatibility)
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko) apply false
     alias(libs.plugins.spotless)
+//    alias(libs.plugins.composeMultiplatform) apply false
 }
 
-extensions.configure<ApiValidationExtension> {
-    nonPublicMarkers += "coil3/annotation/InternalCoilApi"
-    ignoredProjects += project.subprojects.mapNotNull { project ->
-        if (project.name in publicModules) null else project.name
-    }
-    @OptIn(ExperimentalBCVApi::class)
-    klib {
-        enabled = true
-    }
-}
+//extensions.configure<ApiValidationExtension> {
+//    nonPublicMarkers += "coil3/annotation/InternalCoilApi"
+//    ignoredProjects += project.subprojects.mapNotNull { project ->
+//        if (project.name in publicModules) null else project.name
+//    }
+//    @OptIn(ExperimentalBCVApi::class)
+//    klib {
+//        enabled = true
+//    }
+//}
 
 tasks.withType<DokkaMultiModuleTask>().configureEach {
     outputDirectory = layout.projectDirectory.dir("docs/api")
@@ -58,8 +62,11 @@ tasks.withType<DokkaMultiModuleTask>().configureEach {
 
 allprojects {
     repositories {
+        maven("https://mirrors.tencent.com/nexus/repository/maven-tencent")
+        maven("https://mirrors.tencent.com/nexus/repository/maven-public")
         google()
         mavenCentral()
+        mavenLocal()
     }
 
     // Necessary to publish to Maven.

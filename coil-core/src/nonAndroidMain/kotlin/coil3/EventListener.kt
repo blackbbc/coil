@@ -1,6 +1,5 @@
 package coil3
 
-import coil3.EventListener.Factory
 import coil3.decode.DecodeResult
 import coil3.decode.Decoder
 import coil3.fetch.FetchResult
@@ -11,7 +10,6 @@ import coil3.request.Options
 import coil3.request.SuccessResult
 import coil3.size.Size
 import coil3.size.SizeResolver
-import kotlin.jvm.JvmField
 
 actual abstract class EventListener : ImageRequest.Listener {
 
@@ -66,11 +64,11 @@ actual abstract class EventListener : ImageRequest.Listener {
         actual fun create(request: ImageRequest): EventListener
 
         actual companion object {
-            @JvmField actual val NONE = Factory { EventListener.NONE }
+            actual val NONE = Factory { EventListener.NONE }
         }
     }
 
     actual companion object {
-        @JvmField actual val NONE = object : EventListener() {}
+        actual val NONE = object : EventListener() {}
     }
 }

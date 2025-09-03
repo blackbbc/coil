@@ -1,7 +1,6 @@
 package coil3
 
 import coil3.annotation.Poko
-import kotlin.jvm.JvmOverloads
 import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.ColorInfo
 import org.jetbrains.skia.ColorSpace
@@ -12,12 +11,10 @@ actual typealias Bitmap = org.jetbrains.skia.Bitmap
 
 actual typealias Canvas = org.jetbrains.skia.Canvas
 
-@JvmOverloads
 actual fun Bitmap.asImage(shareable: Boolean): BitmapImage {
     return BitmapImage(this, shareable)
 }
 
-@JvmOverloads
 actual fun Image.toBitmap(
     width: Int,
     height: Int,

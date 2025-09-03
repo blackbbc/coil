@@ -5,7 +5,7 @@ import coil3.skikoAwtRuntimeDependency
 plugins {
     id("com.android.library")
     id("kotlin-multiplatform")
-    id("org.jetbrains.kotlinx.atomicfu")
+    id("kotlinx-atomicfu")
 }
 
 addAllMultiplatformTargets(libs.versions.skiko)
@@ -31,25 +31,25 @@ kotlin {
         }
         commonTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.common)
             }
         }
         jvmTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(skikoAwtRuntimeDependency(libs.versions.skiko.get()))
             }
         }
         androidUnitTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.jvm)
             }
         }
         androidInstrumentedTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.android)
             }
         }

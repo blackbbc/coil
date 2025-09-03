@@ -4,7 +4,7 @@ import coil3.androidLibrary
 plugins {
     id("com.android.library")
     id("kotlin-multiplatform")
-    id("org.jetbrains.kotlinx.atomicfu")
+    id("kotlinx-atomicfu")
     id("dev.drewhamilton.poko")
 }
 
@@ -20,7 +20,7 @@ kotlin {
         }
         commonTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.common)
             }
         }
@@ -31,7 +31,7 @@ kotlin {
         }
         androidUnitTest {
             dependencies {
-                implementation(projects.internal.testUtils)
+//                implementation(projects.internal.testUtils)
                 implementation(libs.bundles.test.jvm)
             }
         }

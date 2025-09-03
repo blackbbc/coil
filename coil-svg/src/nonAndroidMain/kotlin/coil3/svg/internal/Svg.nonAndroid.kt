@@ -3,7 +3,6 @@ package coil3.svg.internal
 import coil3.Image
 import coil3.request.Options
 import coil3.svg.SvgImage
-import kotlin.jvm.JvmInline
 import okio.BufferedSource
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.Rect
@@ -18,7 +17,6 @@ internal actual fun parseSvg(source: BufferedSource): Svg {
     return SkiaSvg(SVGDOM(Data.makeFromBytes(source.readByteArray())))
 }
 
-@JvmInline
 private value class SkiaSvg(
     private val svg: SVGDOM,
 ) : Svg {

@@ -61,7 +61,7 @@ fun Project.setupPublishing(
     extensions.configure<MavenPublishBaseExtension> {
         pomFromGradleProperties()
         publishToMavenCentral()
-        signAllPublications()
+//        signAllPublications()
         action()
 
         coordinates(
