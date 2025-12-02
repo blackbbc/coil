@@ -29,5 +29,6 @@ internal actual fun ComponentRegistry.Builder.addAndroidComponents(
 ): ComponentRegistry.Builder {
     return this
         // Decoders
-        .add(SkiaImageDecoder.Factory())
+        // Non-Android platforms don't have Android components
+        // .add(SkiaImageDecoder.Factory())
 }

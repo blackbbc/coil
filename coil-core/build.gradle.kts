@@ -13,6 +13,14 @@ addAllMultiplatformTargets(libs.versions.skiko)
 androidLibrary(name = "coil3.core")
 
 kotlin {
+    targets.named<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>("ohosArm64") {
+        val main by compilations.getting
+        val image by main.cinterops.creating {
+            defFile(file("src/ohosArm64Main/cinterop/image.def"))
+            includeDirs(file("src/ohosArm64Main/cinterop/include"))
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
