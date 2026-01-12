@@ -124,6 +124,28 @@ Image_ErrorCode OH_DecodingOptions_SetDesiredDynamicRange(OH_DecodingOptions *op
         int32_t desiredDynamicRange);
 
 /**
+ * @brief Get desiredSize number for OH_DecodingOptions struct.
+ *
+ * @param  options The OH_DecodingOptions pointer will be operated.
+ * @param desiredSize the number of image desiredSize.
+ * @return Returns {@link Image_ErrorCode}
+ * @since 12
+ */
+Image_ErrorCode OH_DecodingOptions_GetDesiredSize(OH_DecodingOptions *options,
+        Image_Size *desiredSize);
+
+/**
+ * @brief Set desiredSize number for OH_DecodingOptions struct.
+ *
+ * @param  options The OH_DecodingOptions pointer will be operated.
+ * @param desiredSize the number of image desiredSize.
+ * @return Returns {@link Image_ErrorCode}
+ * @since 12
+ */
+Image_ErrorCode OH_DecodingOptions_SetDesiredSize(OH_DecodingOptions *options,
+        Image_Size *desiredSize);
+
+/**
  * @brief Releases decoding options.
  */
 Image_ErrorCode OH_DecodingOptions_Release(OH_DecodingOptions *options);
