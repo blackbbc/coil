@@ -163,6 +163,7 @@ class OhosImageDecoder(
         try {
             // 获取第 0 帧的图片信息（对于非动图，只有一帧）
             OH_ImageSourceNative_GetImageInfo(imageSource, 0, imageInfo)
+                .checkSuccess("获取图片信息失败")
 
             // 分配宽度和高度变量
             val width = alloc<kotlinx.cinterop.UIntVar>()
@@ -170,7 +171,9 @@ class OhosImageDecoder(
 
             // 读取宽度和高度
             OH_ImageSourceInfo_GetWidth(imageInfo, width.ptr)
+                .checkSuccess("获取图片宽度失败")
             OH_ImageSourceInfo_GetHeight(imageInfo, height.ptr)
+                .checkSuccess("获取图片高度失败")
 
             return width.value.toInt() to height.value.toInt()
         } finally {
@@ -204,25 +207,40 @@ class OhosImageDecoder(
             maxSize = options.maxBitmapSize,
         )
 
+        // 用统一缩放系数保持宽高比（与 SkiaImageDecoder 逻辑一致）
+        var multiplier = DecodeUtils.computeSizeMultiplier(
+            srcWidth = srcWidth,
+            srcHeight = srcHeight,
+            dstWidth = dstWidth,
+            dstHeight = dstHeight,
+            scale = options.scale,
+        )
+        if (options.precision == Precision.INEXACT) {
+            multiplier = multiplier.coerceAtMost(1.0)
+        }
+        val outWidth = (multiplier * srcWidth).toInt()
+        val outHeight = (multiplier * srcHeight).toInt()
+
         // 创建解码选项
         val decodingOptsPtr = alloc<kotlinx.cinterop.CPointerVar<cnames.structs.OH_DecodingOptions>>()
         OH_DecodingOptions_Create(decodingOptsPtr.ptr)
+            .checkSuccess("创建解码选项失败")
 
-        val decodingOpts = decodingOptsPtr.value
-        decodingOpts?.let {
+        val decodingOpts = decodingOptsPtr.value ?: error("解码选项指针为 null")
+        decodingOpts.let {
             // 设置动态范围为自动（AUTO）
             // 这样系统会根据图片内容和设备能力自动选择 SDR 或 HDR
             OH_DecodingOptions_SetDesiredDynamicRange(it, IMAGE_DYNAMIC_RANGE_AUTO.toInt())
 
             // 设置目标尺寸以进行下采样
             // 只有在需要缩小图片时才设置（遵循 precision 参数）
-            val shouldDownsample = dstWidth < srcWidth || dstHeight < srcHeight
-            val shouldUpsample = options.precision == Precision.EXACT && (dstWidth > srcWidth || dstHeight > srcHeight)
+            val shouldDownsample = outWidth < srcWidth || outHeight < srcHeight
+            val shouldUpsample = options.precision == Precision.EXACT && (outWidth > srcWidth || outHeight > srcHeight)
 
             if (shouldDownsample || shouldUpsample) {
                 val desiredSize = alloc<Image_Size>()
-                desiredSize.width = dstWidth.toUInt()
-                desiredSize.height = dstHeight.toUInt()
+                desiredSize.width = outWidth.toUInt()
+                desiredSize.height = outHeight.toUInt()
                 OH_DecodingOptions_SetDesiredSize(it, desiredSize.ptr)
                     .checkSuccess("设置目标尺寸失败")
             }
@@ -242,7 +260,7 @@ class OhosImageDecoder(
             return pixelMapPtr.value ?: error("PixelMap 指针为 null")
         } finally {
             // 释放解码选项资源
-            decodingOpts?.let { OH_DecodingOptions_Release(it) }
+            OH_DecodingOptions_Release(decodingOpts)
         }
     }
 
@@ -266,6 +284,7 @@ class OhosImageDecoder(
         try {
             // 获取 PixelMap 的信息
             OH_PixelmapNative_GetImageInfo(pixelMap, pixelmapInfo)
+                .checkSuccess("获取 PixelMap 信息失败")
 
             // 分配宽度和高度变量
             val width = alloc<kotlinx.cinterop.UIntVar>()
@@ -273,7 +292,9 @@ class OhosImageDecoder(
 
             // 读取宽度和高度
             OH_PixelmapImageInfo_GetWidth(pixelmapInfo, width.ptr)
+                .checkSuccess("获取 PixelMap 宽度失败")
             OH_PixelmapImageInfo_GetHeight(pixelmapInfo, height.ptr)
+                .checkSuccess("获取 PixelMap 高度失败")
 
             return width.value.toInt() to height.value.toInt()
         } finally {
@@ -301,7 +322,7 @@ class OhosImageDecoder(
         // 分配 buffer size 变量
         val bufferSize = alloc<kotlinx.cinterop.ULongVar>()
         // RGBA 格式：每个像素 4 字节
-        bufferSize.value = (width * height * 4).toULong()
+        bufferSize.value = (width.toLong() * height * 4).toULong()
 
         // 创建字节数组来接收像素数据
         val pixelBuffer = ByteArray(bufferSize.value.toInt())
