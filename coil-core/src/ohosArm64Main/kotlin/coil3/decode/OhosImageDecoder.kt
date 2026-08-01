@@ -27,7 +27,7 @@ import org.jetbrains.skia.ColorType
 import org.jetbrains.skia.ImageInfo
 import platform.multimedia.Image_ErrorCode
 import platform.ohos.image.Image_Size
-import platform.ohos.image.IMAGE_DYNAMIC_RANGE_AUTO
+import platform.ohos.image.IMAGE_DYNAMIC_RANGE_SDR
 import platform.ohos.image.IMAGE_SUCCESS
 import platform.ohos.image.OH_DecodingOptions_Create
 import platform.ohos.image.OH_DecodingOptions_Release
@@ -228,9 +228,10 @@ class OhosImageDecoder(
 
         val decodingOpts = decodingOptsPtr.value ?: error("解码选项指针为 null")
         decodingOpts.let {
-            // 设置动态范围为自动（AUTO）
-            // 这样系统会根据图片内容和设备能力自动选择 SDR 或 HDR
-            OH_DecodingOptions_SetDesiredDynamicRange(it, IMAGE_DYNAMIC_RANGE_AUTO.toInt())
+            // 强制 SDR 解码。用 AUTO 时，HDR 屏上会把 HDR 图（如华为 CUVA/HDR Vivid 相机照片）解成
+            // 10-bit HDR PixelMap，但下面 createSkiaBitmap 恒按 8-bit RGBA_8888 装箱 —— 位宽/stride 错位，
+            // 渲染成彩虹噪点。Compose/Skia 这条面本就是 8-bit SDR，解成 HDR 也无法正确显示，故恒 tone-map 到 SDR。
+            OH_DecodingOptions_SetDesiredDynamicRange(it, IMAGE_DYNAMIC_RANGE_SDR.toInt())
 
             // 设置目标尺寸以进行下采样
             // 只有在需要缩小图片时才设置（遵循 precision 参数）

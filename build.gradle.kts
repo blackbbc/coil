@@ -7,6 +7,7 @@ import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import dev.drewhamilton.poko.gradle.PokoPluginExtension
 //import kotlinx.validation.ApiValidationExtension
 //import kotlinx.validation.ExperimentalBCVApi
+import org.gradle.api.publish.PublishingExtension
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
@@ -166,6 +167,27 @@ allprojects {
     }
 
     applyOkioJsTestWorkaround()
+
+    // Publish the KBA fork to XMind's AWS CodeArtifact (the vanniktech plugin applies
+    // `maven-publish` under the hood). Token comes from the `codeartifactToken` gradle
+    // property (managed by bagel's scripts/codeartifact-refresh.sh) or the
+    // CODEARTIFACT_AUTH_TOKEN env var. Produces `publish*ToCodeArtifactRepository` tasks.
+    plugins.withId("maven-publish") {
+        extensions.configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "CodeArtifact"
+                    url = uri("https://supermind-688567292074.d.codeartifact.ap-northeast-1.amazonaws.com/maven/main/")
+                    credentials {
+                        username = "aws"
+                        password = providers.gradleProperty("codeartifactToken").orNull
+                            ?: System.getenv("CODEARTIFACT_AUTH_TOKEN")
+                            ?: ""
+                    }
+                }
+            }
+        }
+    }
 }
 
 private val ktlintRules = buildMap {
